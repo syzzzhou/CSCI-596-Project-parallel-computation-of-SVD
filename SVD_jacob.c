@@ -11,9 +11,10 @@ int sign(double number)
 double vec_mult(double *v1, double *v2)
 {
 	double val=0;
-	for (int i=0;i<sizeof(v1);i++)
+	//printf("%d%d\n",sizeof(v1),sizeof(v2));
+	for (int i=0;i<=sizeof(v1)/sizeof(v1[0]);i++)
 	{
-		val+=v1[i]*v2[i];
+		val+=(*(v1+i))*(*(v2+i));
 	}
 	return val;
 }
@@ -22,6 +23,7 @@ void Orthogonal(double matrix[ROW][COL],int c1, int c2, double V[COL][COL],bool*
 {
 	double Ci[COL];
 	double Cj[COL];
+	//printf("%lu   %lu\n",sizeof(Ci),sizeof(Cj));
 	for (int i=0;i<ROW;i++)
 	{
 		Ci[i]=matrix[i][c1];
@@ -30,10 +32,14 @@ void Orthogonal(double matrix[ROW][COL],int c1, int c2, double V[COL][COL],bool*
 	double inner_prod=vec_mult(Ci,Cj);
 	if (fabs(inner_prod)<THRESHOLD)
 		return;
-	pass=false;
+	*pass=false;
+	// for (int i=0;i<ROW;i++)
+	// {
+	// 	printf("%f  %f\n",Ci[i],Cj[i]);
+	// }
 	double len1=vec_mult(Ci,Ci);
 	double len2=vec_mult(Cj,Cj);
-	printf("%f\n",len1);
+	//printf("%f  %f   %f\n",len1,len2,inner_prod);
 	if(len1<len2){           
         for(int row=0;row<ROW;++row){
             matrix[row][c1]=Cj[row];
@@ -51,7 +57,7 @@ void Orthogonal(double matrix[ROW][COL],int c1, int c2, double V[COL][COL],bool*
     double sin = cos * tan;
     for(int row=0;row<ROW;++row){
         double var1=matrix[row][c1]*cos+matrix[row][c2]*sin;
-        double var2=matrix[row][c1]*cos-matrix[row][c2]*sin;
+        double var2=matrix[row][c2]*cos-matrix[row][c1]*sin;
         matrix[row][c1]=var1;
         matrix[row][c2]=var2;
     }
@@ -76,7 +82,10 @@ void jacob_one_side(double matrix[ROW][COL], double V[COL][COL])
         }
         printf("%d\n",ITERATION-iterat);
         if (pass) 
+        {
+        	//printf("%s\n","cnm");
             break;
+        }
 	}
 }
 
@@ -87,7 +96,7 @@ int main(int argc, char **argv)
     	return 0;
     }
     double A[ROW][COL];
-    double vec[]= {6,5,1,9,8,4,8,5,2,4,6,9,1,2,3,2,1,4};
+    double vec[]= {3,2,2,2,3,-2};
     double V[COL][COL];
     double S[ROW][COL];
     double U[ROW][ROW];
@@ -105,20 +114,34 @@ int main(int argc, char **argv)
     	V[i][i]=1;
     }
     jacob_one_side(A,V);
+    double E[COL];
+    int nonzero=0;
     for (int i = 0; i < COL; ++i) {
     	double norm=0;
         for (int j=0;j<ROW;j++)
         {
         	norm+=A[j][i]*A[j][i];
         }
-        S[i][i]=sqrt(norm);              
+        if (norm>THRESHOLD)
+        	nonzero+=1;
+        E[i]=sqrt(norm);          
     }
+    for (int i = 0; i < ROW; ++i) {
+    	S[i][i]=E[i];
+        for (int j=0;j<nonzero;j++)
+        {
+        	U[i][j]=A[i][j]/E[i];
+        }      
+    } 
+    //printf("%f.  %f\n",E[0],S[0][0]);
+    printf("A=");
+    print_matrix((double *)A,ROW,COL);
     printf("S=");
     print_matrix((double *)S,ROW,COL);
     printf("V=");
     print_matrix((double *)V,COL,COL);
-    printf("A=");
-    print_matrix((double *)A,ROW,COL);
+    printf("U=");
+    print_matrix((double *)U,ROW,COL);
 }
 
 
