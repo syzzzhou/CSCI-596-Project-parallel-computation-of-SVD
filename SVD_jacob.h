@@ -1,18 +1,19 @@
-double THRESHOLD=1E-8;
-int ITERATION=30;
-int ROW=2;
-int COL=3;
+#ifndef SVD_JACOB_H
+#define SVD_JACOB_H
 
-void print_matrix(double *A,int r,int c)
-{
-	for (int i=0;i<r;i++)
-    {
-    	for (int j=0;j<c;j++)
-    	{
-    		printf("%f  ",*((A+i*c) + j));
-    	}
-    	printf("\n");
-    }
-}
+#include <stdbool.h>
+#include <stdio.h>
 
+extern double THRESHOLD;
+extern int ITERATION;
+extern int ROW;
+extern int COL;
 
+void print_matrix(double **A, int r, int c, const char *name);
+double vec_mult(double *v1, double *v2, int len);
+void Orthogonal(double** matrix, int rows, int c1, int c2, double** V, bool *pass);
+void jacob_one_side_mpi(double** matrix, int rows, int columns, double** V, int rank, int size);
+double** allocate_matrix(int rows, int columns);
+void free_matrix(double** matrix, int rows);
+
+#endif
