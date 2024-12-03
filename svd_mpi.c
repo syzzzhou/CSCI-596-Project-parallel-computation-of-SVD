@@ -25,35 +25,47 @@ float starttime,endtime,time1,time2;
 
 void read_fileA()
 {
-   int i,j;
-   FILE *fdA;
+    int i, j;
+    FILE *fdA;
 
-   time1=MPI_Wtime();
-   fdA=fopen("dataIn.txt","r");
-   fscanf(fdA,"%d %d", &row, &col);
+    time1 = MPI_Wtime();
+    fdA = fopen("dataIn.txt", "r");
+    fscanf(fdA, "%d %d", &row, &col);
 
-   A=(float*)malloc(floatsize*row*col);
+    A = (float *)malloc(floatsize * row * col);
 
-   for(i = 0; i < row; i ++)
-   {
-       for(j = 0; j < col; j ++) fscanf(fdA, "%f", A+i*row+j);
-   }
-   fclose(fdA);
+    for (i = 0; i < row; i++)
+    {
+        for (j = 0; j < col; j++)
+        {
+            fscanf(fdA, "%f", &A[i * col + j]); // fix index
+        }
+    }
+    fclose(fdA);
 
-   printf("Input of file \"dataIn.txt\"\n");
-   printf("%d\t %d\n",row, col);
-   for(i=0;i<row;i++)
-   {
-       for(j=0;j<col;j++) printf("%f\t",A(i,j));
-       printf("\n");
-   }
+    printf("Input of file \"dataIn.txt\"\n");
+    printf("%d\t %d\n", row, col);
+    for (i = 0; i < row; i++)
+    {
+        for (j = 0; j < col; j++)
+        {
+            printf("%f\t", A[i * col + j]); 
+        }
+        printf("\n");
+    }
 
-   V =(float*)malloc(floatsize*col*col);
+    V = (float *)malloc(floatsize * col * col);
 
-   for(i=0;i<col;i++)
-       for(j=0;j<col;j++)
-           if (i==j) V(i,j)=1.0;
-   else V(i,j)=0.0;
+    for (i = 0; i < col; i++)
+    {
+        for (j = 0; j < col; j++)
+        {
+            if (i == j)
+                V[i * col + j] = 1.0;
+            else
+                V[i * col + j] = 0.0;
+        }
+    }
 }
 
 int main(int argc,char **argv)
