@@ -1,16 +1,18 @@
 # What is SVD (Singular Value Decomposition)
 
-Given a matrix  A  of size  m x n , the SVD decomposes A into the product of three matrices:
+Given a matrix  M  of size  m x n , the SVD decomposes M into the product of three matrices:
 
 
-A = U Σ V^T
+M = U Σ V^T
 
 
 
 Where:
-- U: An m x m  orthogonal matrix (columns are orthonormal eigenvectors of A A^T 
+- U: An m x m  orthogonal matrix (columns are orthonormal eigenvectors of M M^T 
 - Σ: An  m x n  diagonal matrix containing the singular values (non-negative values sorted in decreasing order)
-- V : An n x n  orthogonal matrix rows are orthonormal eigenvectors of  A^T A 
+- V : An n x n  orthogonal matrix rows are orthonormal eigenvectors of  M^T M
+<img width="240" alt="image" src="https://github.com/user-attachments/assets/8246c7fa-cbf7-47e4-a656-976e1252ade3">
+
 
 ---
 
@@ -33,7 +35,7 @@ Our project focuses on implementing a parallelized Singular Value Decomposition 
 
 ### Core of Jacobi Method
 
-The method transforms the symmetric matrix A into a diagonal matrix A', whose diagonal entries are the eigenvalues of A A^T , using a sequence of rotations.
+The method transforms the symmetric matrix M into a diagonal matrix M', whose diagonal entries are the eigenvalues of M M^T , using a sequence of rotations.
 
 The rotation matrix G(i, j, θ) is defined as:
 
