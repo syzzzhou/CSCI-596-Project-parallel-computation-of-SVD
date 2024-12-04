@@ -1,15 +1,16 @@
 # What is SVD (Singular Value Decomposition)
 
-Given a matrix \( A \) of size \( m \times n \), the SVD decomposes \( A \) into the product of three matrices:
+Given a matrix  A  of size  m x n , the SVD decomposes A into the product of three matrices:
 
-\[
-A = U \Sigma V^T
-\]
+
+A = U Σ V^T
+
+
 
 Where:
-- \( U \): An \( m \times m \) orthogonal matrix (columns are orthonormal eigenvectors of \( A A^T \))
-- \( \Sigma \): An \( m \times n \) diagonal matrix containing the singular values (non-negative values sorted in decreasing order)
-- \( V \): An \( n \times n \) orthogonal matrix (rows are orthonormal eigenvectors of \( A^T A \))
+- U: An m x m  orthogonal matrix (columns are orthonormal eigenvectors of A A^T 
+- Σ: An  m x n  diagonal matrix containing the singular values (non-negative values sorted in decreasing order)
+- V : An n x n  orthogonal matrix rows are orthonormal eigenvectors of  A^T A 
 
 ---
 
@@ -32,14 +33,14 @@ Our project focuses on implementing a parallelized Singular Value Decomposition 
 
 ### Core of Jacobi Method
 
-The method transforms the symmetric matrix \( A \) into a diagonal matrix \( A' \), whose diagonal entries are the eigenvalues of \( A A^T \), using a sequence of rotations.
+The method transforms the symmetric matrix A into a diagonal matrix A', whose diagonal entries are the eigenvalues of A A^T , using a sequence of rotations.
 
-The rotation matrix \( G(i, j, \theta) \) is defined as:
+The rotation matrix G(i, j, θ) is defined as:
 
 <img width="305" alt="image" src="https://github.com/user-attachments/assets/2299c185-df3e-4ee6-9061-02742148cc20">
 
 
-This rotational matrix operates only on the \( i \)-th and \( j \)-th rows/columns to make them orthogonal to each other. Sequentially, we can make all the columns orthogonal to each other. In this way, we would be able to retrieve U* Σ , and our final rotational matrix would be V.
+This rotational matrix operates only on the i-th and j -th rows/columns to make them orthogonal to each other. Sequentially, we can make all the columns orthogonal to each other. In this way, we would be able to retrieve U* Σ , and our final rotational matrix would be V.
 
 ---
 
