@@ -39,7 +39,7 @@ The rotation matrix \( G(i, j, \theta) \) is defined as:
 <img width="305" alt="image" src="https://github.com/user-attachments/assets/2299c185-df3e-4ee6-9061-02742148cc20">
 
 
-This rotational matrix operates only on the \( i \)-th and \( j \)-th rows/columns to make them orthogonal to each other. Sequentially, we can make all the columns orthogonal to each other. In this way, we retrieve \( U \), \( \Sigma \), and \( V \).
+This rotational matrix operates only on the \( i \)-th and \( j \)-th rows/columns to make them orthogonal to each other. Sequentially, we can make all the columns orthogonal to each other. In this way, we would be able to retrieve U* Σ , and our final rotational matrix would be V.
 
 ---
 
