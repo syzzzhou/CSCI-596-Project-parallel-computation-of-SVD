@@ -108,14 +108,28 @@ int main(int argc, char **argv)
     		A[i][j]=vec[i*COL+j];
     	}
     }
+    // for (int i=0;i<COL;i++)
+    // {
+    //     for (int j=0;j<COL;j++)
+    //     {
+    //         if (i==j) V[i][i]=1; else V[i][j]=0;
+    //     }
+    // }
     printf("A=");
     print_matrix((double *)A,ROW,COL);
     for (int i=0;i<COL;i++)
     {
-    	V[i][i]=1;
+    	for (int j=0;j<COL;j++)
+         {
+             if (i==j) V[i][i]=1; else V[i][j]=0;
+         }
     }
     jacob_one_side(A,V);
     double E[COL];
+    for (int i=0;i<COL;i++)
+    {
+        E[i]=0;
+    }
     int nonzero=0;
     for (int i = 0; i < COL; ++i) {
     	double norm=0;
@@ -128,16 +142,20 @@ int main(int argc, char **argv)
         //printf("%f\n",norm);
         E[i]=sqrt(norm);          
     }
+    for (int i = 0; i < ROW; ++i) {
+        for (int j = 0; j < COL; ++j){
+        if (i==j) S[i][i]=E[i]; else S[i][j]=0;
+    }
+    for (int i = 0; i < ROW; ++i) {
+        for (int j = 0; j < ROW; ++j){
+        U[i][j]=0;
+       }
+    }
     for (int i = 0; i < ROW; ++i){
         for (int j=0;j<nonzero;j++)
         {
             U[i][j]=A[i][j]/E[j];
         }      
-    }
-    printf("S=");
-    print_matrix((double *)S,ROW,COL); 
-    for (int i = 0; i < ROW; i++) {
-    	S[i][i]=E[i];
     }
     printf("A=");
     print_matrix((double *)A,ROW,COL);
@@ -147,6 +165,7 @@ int main(int argc, char **argv)
     print_matrix((double *)V,COL,COL);
     printf("U=");
     print_matrix((double *)U,ROW,ROW);
+}
 }
 
 
