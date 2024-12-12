@@ -9,11 +9,11 @@ int sign(double number)
 	if (number<0) return -1; else return 1;
 }
 
-double vec_mult(double *v1, double *v2)
+double vec_mult(double *v1, double *v2,int len)
 {
 	double val=0;
 	//printf("%d%d\n",sizeof(v1),sizeof(v2));
-	for (int i=0;i<=sizeof(v1)/sizeof(v1[0]);i++)
+	for (int i=0;i<len;i++)
 	{
 		val+=(*(v1+i))*(*(v2+i));
 	}
@@ -30,7 +30,7 @@ void Orthogonal(double matrix[ROW][COL],int c1, int c2, double V[COL][COL],bool*
 		Ci[i]=matrix[i][c1];
 		Cj[i]=matrix[i][c2];
 	}
-	double inner_prod=vec_mult(Ci,Cj);
+	double inner_prod=vec_mult(Ci,Cj,ROW);
 	if (fabs(inner_prod)<THRESHOLD)
 		return;
 	*pass=false;
@@ -38,8 +38,8 @@ void Orthogonal(double matrix[ROW][COL],int c1, int c2, double V[COL][COL],bool*
 	// {
 	// 	printf("%f  %f\n",Ci[i],Cj[i]);
 	// }
-	double len1=vec_mult(Ci,Ci);
-	double len2=vec_mult(Cj,Cj);
+	double len1=vec_mult(Ci,Ci,ROW);
+	double len2=vec_mult(Cj,Cj,ROW);
 	//printf("%f  %f   %f\n",len1,len2,inner_prod);
 	if(len1<len2){           
         for(int row=0;row<ROW;++row){
@@ -99,11 +99,18 @@ int main(int argc, char **argv)
     	return 0;
     }
     double A[ROW][COL];
-    double vec[]= {3,2,2,2,3,-2};
+    double vec[]= {6,5,1,9,8,4,8,5,2,4,6,9,1,2,3,2,1,4};
     double V[COL][COL];
+    //printf("V=");
+    //print_matrix((double *)V,COL,COL);
     double S[ROW][COL];
-    omp_set_num_threads(2);
+    omp_set_num_threads(4);
     double U[ROW][ROW];
+    
+    //for (int i=0;i<COL;i++)
+    //{
+       // V[i][i]=1.0;
+    //}
     for (int i=0;i<ROW;i++)
     {
     	for (int j=0;j<COL;j++)
@@ -113,12 +120,23 @@ int main(int argc, char **argv)
     }
     printf("A=");
     print_matrix((double *)A,ROW,COL);
+    //printf("V=");
+    //print_matrix((double *)V,COL,COL);
     for (int i=0;i<COL;i++)
     {
-    	V[i][i]=1;
+        for (int j=0;j<COL;j++){
+	
+    	if (i==j) V[i][i]=1; else V[i][j]=0;
+        }
     }
+    // printf("V=");
+    // print_matrix((double *)V,COL,COL);
     jacob_one_side(A,V);
     double E[COL];
+    for (int i=0;i<COL;i++)
+    {
+        E[i]=0;
+    }
     int nonzero=0;
     for (int i = 0; i < COL; ++i) {
     	double norm=0;
@@ -131,10 +149,20 @@ int main(int argc, char **argv)
         E[i]=sqrt(norm);          
     }
     for (int i = 0; i < ROW; ++i) {
-    	S[i][i]=E[i];
+	for (int j=0;j<COL;++j){
+    	if (i==j) S[i][i]=E[i]; else S[i][j]=0;
+        }
+    }
+    for (int i = 0; i < ROW; ++i) {
+        for (int j = 0; j < ROW; ++j){
+        U[i][j]=0;
+       }
+    }
+    for (int i=0;i<ROW;i++)
+    {
         for (int j=0;j<nonzero;j++)
         {
-        	U[i][j]=A[i][j]/E[i];
+        	U[i][j]=A[i][j]/E[j];
         }      
     } 
     //printf("%f.  %f\n",E[0],S[0][0]);
@@ -145,7 +173,7 @@ int main(int argc, char **argv)
     printf("V=");
     print_matrix((double *)V,COL,COL);
     printf("U=");
-    print_matrix((double *)U,ROW,COL);
+    print_matrix((double *)U,ROW,ROW);
 }
 
 
