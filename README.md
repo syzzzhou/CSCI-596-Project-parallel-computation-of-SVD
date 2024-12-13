@@ -57,3 +57,9 @@ The independence of Jacobi rotations makes the method highly amenable to paralle
 - **Hybrid Parallelization**
 
 By benchmarking each parallelization approach and their hybrid implementation, the project provides insights into the efficiency of these methods for large-scale SVD computations.
+
+### The division of work
+In our work, Yuxiao is mainly in charge of finding the algorithm, implementing the code for one thread, and openmp implementation. Xin is mainly in charge of finding more resources on github and the MPI implementation, while Shuyan is mainly in charge of searching for topics, ways to decompose a matrix, and CUDA implementation
+
+### OpenMP
+After testing the one-thread code on several sets of matrices, I started writting the parallel part of openMP. I tested the multi-threading on a 500*300 matrix, and tested the case of 1, 2,and 4 threads. Finally, the time it takes is shown in SVD_omp.out. Finally, for the multiple thread part, the time consumed has decreased. However, one should notice that even for the case of 1 single thread, the time consumed is already very low(around 2 seconds), so the improvement in efficiency doesn't seem to be that noticeable. As a result, I suppose if we want to further see the improvement in efficiency, it may be better if we can test it on a even larger matrix.
