@@ -9,7 +9,6 @@
 #define intsize sizeof(int)
 #define floatsize sizeof(float)
 
-// Define the macros for the arrays
 #define A_IDX(x,y) A[(x)*col+(y)]
 #define V_IDX(x,y) V[(x)*col+(y)]
 #define U_IDX(x,y) U[(x)*col+(y)]
@@ -25,38 +24,8 @@ float *a,*e;
 MPI_Status status;
 float starttime,endtime,time1,time2;
 
-void read_fileA()
-{
-    int i, j;
-    FILE *fdA;
-
-    time1 = MPI_Wtime();
-    fdA = fopen("dataIn.txt", "r");
-    fscanf(fdA, "%d %d", &row, &col);
-
-    A = (float *)malloc(floatsize * row * col);
-
-    for (i = 0; i < row; i++)
-    {
-        for (j = 0; j < col; j++)
-        {
-            fscanf(fdA, "%f", &A_IDX(i,j));
-        }
-    }
-    fclose(fdA);
-
-    V = (float *)malloc(floatsize * col * col);
-    for (i = 0; i < col; i++)
-    {
-        for (j = 0; j < col; j++)
-        {
-            if (i == j)
-                V_IDX(i,j) = 1.0;
-            else
-                V_IDX(i,j) = 0.0;
-        }
-    }
-}
+// no need to read file
+// void read_fileA() { ... }
 
 int main(int argc,char **argv)
 {
@@ -77,14 +46,39 @@ int main(int argc,char **argv)
    loop=0; // Initialize loop counter
    k=0; // Initialize k counter
 
-   if (myid==0)
-       read_fileA(); // Root process reads the input file
+   // set the matrix dimension
+   int baseN = 500;
+   double scale_factor = pow((double)p/1.0, 1.0/3.0);
+   row = col = (int)(baseN * scale_factor);
+
+   if (myid==0) {
+       A = (float *)malloc(floatsize * row * col);
+       srand(0);
+       for (i = 0; i < row; i++) {
+           for (j = 0; j < col; j++) {
+               // inialize A with random float number between 0 and 1
+               A_IDX(i,j) = (float)rand() / (float)RAND_MAX;
+           }
+       }
+
+       V = (float *)malloc(floatsize * col * col);
+       for (i = 0; i < col; i++) {
+           for (j = 0; j < col; j++) {
+               if (i == j)
+                   V_IDX(i,j) = 1.0;
+               else
+                   V_IDX(i,j) = 0.0;
+           }
+       }
+   }
+   // =========== Weak Scaling ===========
+
+   time1 = MPI_Wtime(); // start the timer for data distribution
 
    // Broadcast the number of rows and columns to all processes
    MPI_Bcast(&row,1,MPI_INT,0,MPI_COMM_WORLD);
    MPI_Bcast(&col,1,MPI_INT,0,MPI_COMM_WORLD);
 
-   // according to the number of processes, calculate the number of rows and columns for each process
    int rows_per_proc = row / p;
    int remainder_rows = row % p;
    int cols_per_proc = col / p;
@@ -93,9 +87,8 @@ int main(int argc,char **argv)
    int local_m = rows_per_proc + (myid < remainder_rows ? 1 : 0);
    int local_n = cols_per_proc + (myid < remainder_cols ? 1 : 0);
 
-   // calculate the displacements for the rows and columns
-   int *all_m = NULL; // store the number of rows for all processes
-   int *all_n = NULL; // store the number of columns for all processes
+   int *all_m = NULL;
+   int *all_n = NULL;
    int *row_displs = NULL;
    int *col_displs = NULL;
 
@@ -145,7 +138,7 @@ int main(int argc,char **argv)
            for(j=0;j<col;j++)
                e_IDX(i,j)=V_IDX(col_displs[0]+i,j);
 
-       // send the data to other processes
+       // send the remaining parts to other processes
        for (int r=1; r<p; r++) {
            MPI_Send(A + (row_displs[r]*col), all_m[r]*col, MPI_FLOAT, r, r, MPI_COMM_WORLD);
            MPI_Send(V + (col_displs[r]*col), all_n[r]*col, MPI_FLOAT, r, r, MPI_COMM_WORLD);
@@ -218,10 +211,9 @@ int main(int argc,char **argv)
        loop ++;
    }
 
-   // gather the data
+   // Gather the data
    if (myid==0)
    {
-       // copy the part belonging to process 0
        for(i=0;i<local_m;i++)
            for(j=0;j<col;j++)
                A_IDX(row_displs[0]+i,j)=a_IDX(i,j);
@@ -284,7 +276,6 @@ int main(int argc,char **argv)
            for(i=0;i<row;i++)
                U_IDX(i,j)=A_IDX(i,j)/B_IDX(j);
 
-       // SVD_jacob function call
        int ROW = row;
        int COL = col;
        double (*matrix)[COL] = malloc(sizeof(double)*ROW*COL);
@@ -304,14 +295,14 @@ int main(int argc,char **argv)
        free(I);
 
        endtime=MPI_Wtime();
-       printf("\n========== Strong Scaling Test Results ==========\n");
+       printf("\n========== Isogranular Scaling Test Results ==========\n");
        printf("Number of processes  = %d\n",group_size);
-       printf("Matrix dimension     = %d x %d\n",row,col);
+       printf("Matrix dimension     = %d x %d (Isogranular scaled)\n",row,col);
        printf("Iteration num        = %d\n",loop);
        printf("Whole running time   = %f seconds\n",endtime-starttime);
        printf("Distribute data time = %f seconds\n",time2-time1);
        printf("Parallel compute time= %f seconds\n",endtime-time2);
-       printf("===============================================\n");
+       printf("=====================================================\n");
    }
 
    free(a);

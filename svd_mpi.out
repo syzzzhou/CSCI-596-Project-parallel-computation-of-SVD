@@ -1,0 +1,61 @@
+==========================================
+SLURM_JOB_ID = 28389765
+SLURM_JOB_NODELIST = d06-[18-21]
+TMPDIR = /tmp/SLURM_28389765
+==========================================
+##### Strong scaling #####
+
+========== Strong Scaling Test Results ==========
+Number of processes  = 4
+Matrix dimension     = 500 x 500
+Iteration num        = 6
+Whole running time   = 5.703966 seconds
+Distribute data time = 0.080741 seconds
+Parallel compute time= 5.623225 seconds
+===============================================
+
+========== Strong Scaling Test Results ==========
+Number of processes  = 2
+Matrix dimension     = 500 x 500
+Iteration num        = 6
+Whole running time   = 7.527608 seconds
+Distribute data time = 0.075265 seconds
+Parallel compute time= 7.452343 seconds
+===============================================
+
+========== Strong Scaling Test Results ==========
+Number of processes  = 1
+Matrix dimension     = 500 x 500
+Iteration num        = 6
+Whole running time   = 12.389271 seconds
+Distribute data time = 0.063291 seconds
+Parallel compute time= 12.325980 seconds
+===============================================
+##### Weak scaling   #####
+
+========== Isogranular Scaling Test Results ==========
+Number of processes  = 4
+Matrix dimension     = 793 x 793 (Isogranular scaled)
+Iteration num        = 6
+Whole running time   = 20.631163 seconds
+Distribute data time = 0.038218 seconds
+Parallel compute time= 20.574913 seconds
+=====================================================
+
+========== Isogranular Scaling Test Results ==========
+Number of processes  = 2
+Matrix dimension     = 629 x 629 (Isogranular scaled)
+Iteration num        = 6
+Whole running time   = 14.895223 seconds
+Distribute data time = 0.018093 seconds
+Parallel compute time= 14.865921 seconds
+=====================================================
+
+========== Isogranular Scaling Test Results ==========
+Number of processes  = 1
+Matrix dimension     = 500 x 500 (Isogranular scaled)
+Iteration num        = 6
+Whole running time   = 12.076630 seconds
+Distribute data time = 0.002714 seconds
+Parallel compute time= 12.066708 seconds
+=====================================================
