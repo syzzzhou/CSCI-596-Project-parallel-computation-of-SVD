@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include "SVD_jacob.h"
 #include <omp.h>
+#include <stdlib.h>
+#include <time.h>
 
 int sign(double number)
 {
@@ -83,7 +85,7 @@ void jacob_one_side(double matrix[ROW][COL], double V[COL][COL])
                 Orthogonal(matrix, i, j, V, &pass);
             }
         }
-        printf("%d\n",ITERATION-iterat);
+        //printf("%d\n",ITERATION-iterat);
         if (pass) 
         {
         	//printf("%s\n","cnm");
@@ -98,13 +100,25 @@ int main(int argc, char **argv)
     {
     	return 0;
     }
+    //printf("%d  %d\n",ROW,COL);
+    int nprocs=atoi(argv[1]);
+    //ROW=ROW*nprocs;
+    //COL=COL*nprocs;
+    //printf("%d  %d\n",ROW,COL);
     double A[ROW][COL];
-    double vec[]= {6,5,1,9,8,4,8,5,2,4,6,9,1,2,3,2,1,4};
+    //double vec[]= {6,5,1,9,8,4,8,5,2,4,6,9,1,2,3,2,1,4};
+    double vec[ROW*COL];
+    for (int i=0;i<ROW*COL;i++)
+    {
+        vec[i]=rand()%10;
+    }
     double V[COL][COL];
     //printf("V=");
     //print_matrix((double *)V,COL,COL);
     double S[ROW][COL];
-    omp_set_num_threads(4);
+    //t1=omp_get_wtime();
+    //int nprocs=atoi(argv[1]);
+    omp_set_num_threads(nprocs);
     double U[ROW][ROW];
     
     //for (int i=0;i<COL;i++)
@@ -118,8 +132,8 @@ int main(int argc, char **argv)
     		A[i][j]=vec[i*COL+j];
     	}
     }
-    printf("A=");
-    print_matrix((double *)A,ROW,COL);
+    //printf("A=");
+    //print_matrix((double *)A,ROW,COL);
     //printf("V=");
     //print_matrix((double *)V,COL,COL);
     for (int i=0;i<COL;i++)
@@ -131,7 +145,9 @@ int main(int argc, char **argv)
     }
     // printf("V=");
     // print_matrix((double *)V,COL,COL);
+    double t1=omp_get_wtime();
     jacob_one_side(A,V);
+    double t2=omp_get_wtime();
     double E[COL];
     for (int i=0;i<COL;i++)
     {
@@ -164,16 +180,17 @@ int main(int argc, char **argv)
         {
         	U[i][j]=A[i][j]/E[j];
         }      
-    } 
+    }
+    printf("Nprocs,Execution time (s) = %d\t%le\n",nprocs,t2-t1); 
     //printf("%f.  %f\n",E[0],S[0][0]);
-    printf("A=");
-    print_matrix((double *)A,ROW,COL);
-    printf("S=");
-    print_matrix((double *)S,ROW,COL);
-    printf("V=");
-    print_matrix((double *)V,COL,COL);
-    printf("U=");
-    print_matrix((double *)U,ROW,ROW);
+    //printf("A=");
+    //print_matrix((double *)A,ROW,COL);
+    //printf("S=");
+    //print_matrix((double *)S,ROW,COL);
+    //printf("V=");
+    //print_matrix((double *)V,COL,COL);
+    //printf("U=");
+    //print_matrix((double *)U,ROW,ROW);
 }
 
 
