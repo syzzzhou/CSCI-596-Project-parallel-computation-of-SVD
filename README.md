@@ -90,14 +90,14 @@ Problem Setup: Increase the matrix size proportionally to the number of processe
 
 4 Processes (793 x 793): Whole Running Time: 20.631163 s Distribute Data Time: 0.038218 s Parallel Compute Time: 20.574913 s
 
-Analysis: As we increase both problem size and process count, total runtime increases from ~12 s (1 process) to ~20.6 s (4 processes). When performing weak scaling, the problem size and the number of processes both grow, keeping the per-process workload roughly constant. However, the total runtime still increases because:
+Analysis: As we increase both problem size and process count, total runtime increases from ~12 s (1 process) to ~20.6 s (4 processes). When performing weak scaling, the problem size and the number of processes both grow, keeping the per-process workload roughly constant. This is not we expected.
 
-Increased total computation: Although each process handles a similar workload, the total amount of data and operations rises with the overall matrix dimensions.
-More global communication: Operations like MPI_Allreduce occur more frequently and involve more processes, increasing communication overhead.
-Longer iterations: Even if each process does roughly the same amount of work, the larger global problem size means more data to access, more rotations to compute, and extended synchronization periods, all contributing to a higher total runtime.
-The code’s parallelization strategy remains effective, but total runtime naturally increases with the increased global problem dimension. Data distribution times remain minimal, showing the overhead does not dominate runtime even as the problem scales.
+The Problem of Using Parallel Computing Matrix Decomposition:
+1. More global communication: Operations like MPI_Allreduce occur more frequently and involve more processes, increasing communication overhead.
+2. Longer iterations: Even if each process does roughly the same amount of work, the larger global problem size means more data to access, more rotations to compute, and extended synchronization periods, all contributing to a higher total runtime.
 
-Overall Observations: Strong Scaling: Good performance improvements as we add more MPI processes, reducing runtime for a fixed-size matrix. Weak Scaling: Runtime grows as problem size and number of processes increase proportionally, as expected. The approach remains efficient for larger problems. Overheads: Data distribution overhead is small compared to the total compute time. Iteration Stability: All tests converged in 6 iterations, indicating consistent convergence properties for these test cases.
+
+
 
 
 
