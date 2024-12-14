@@ -68,7 +68,7 @@ After testing the one-thread code on several sets of matrices, I started writtin
 MPI Scaling Results and Analysis
 We ran the MPI-enabled Jacobi-based SVD on a computing cluster managed by Carc:
 
-Strong Scaling (Fixed Problem Size)
+#### Strong Scaling (Fixed Problem Size)
 
 Problem Setup: Matrix dimension fixed at 500 x 500, running 6 iterations.
 
@@ -80,7 +80,7 @@ Problem Setup: Matrix dimension fixed at 500 x 500, running 6 iterations.
 
 Analysis: As we increase the number of processes from 1 to 4 for the same problem size, the runtime decreases significantly: From ~12.39 s with 1 process down to ~5.70 s with 4 processes. This shows good strong scaling: doubling the processes reduces computation time considerably. Data distribution overhead remains small, indicating efficient initialization and data partitioning.
 
-Weak Scaling (Isogranular Scaling)
+#### Weak Scaling (Isogranular Scaling)
 
 Problem Setup: Increase the matrix size proportionally to the number of processes, maintaining a similar workload per process. Six iterations were run for each configuration.
 
@@ -90,9 +90,9 @@ Problem Setup: Increase the matrix size proportionally to the number of processe
 
 4 Processes (793 x 793): Whole Running Time: 20.631163 s Distribute Data Time: 0.038218 s Parallel Compute Time: 20.574913 s
 
-Analysis: As we increase both problem size and process count, total runtime increases from ~12 s (1 process) to ~20.6 s (4 processes). When performing weak scaling, the problem size and the number of processes both grow, keeping the per-process workload roughly constant. This is not we expected.
+#### Analysis: As we increase both problem size and process count, total runtime increases from ~12 s (1 process) to ~20.6 s (4 processes). When performing weak scaling, the problem size and the number of processes both grow, keeping the per-process workload roughly constant. This is not we expected.
 
-The Problem of Using Parallel Computing Matrix Decomposition:
+#### The Problem of Using Parallel Computing Matrix Decomposition:
 1. More global communication: Operations like MPI_Allreduce occur more frequently and involve more processes, increasing communication overhead.
 2. Longer iterations: Even if each process does roughly the same amount of work, the larger global problem size means more data to access, more rotations to compute, and extended synchronization periods, all contributing to a higher total runtime.
 
