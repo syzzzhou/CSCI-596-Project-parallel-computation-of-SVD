@@ -72,21 +72,14 @@ We ran the MPI-enabled Jacobi-based SVD on a computing cluster managed by Carc:
 Problem Setup: Matrix dimension fixed at 500 x 500, running 6 iterations.
 
 ![image](https://github.com/syzzzhou/CSCI-596-Project-parallel-computation-of-SVD/blob/Xin-He/images/Screenshot%202024-12-13%20174446.jpg)
-![image](https://github.com/syzzzhou/CSCI-596-Project-parallel-computation-of-SVD/blob/Xin-He/images/Screenshot%202024-12-13%20174513.jpg)
 
 Analysis: As we increase the number of processes from 1 to 4 for the same problem size, the runtime decreases significantly: From ~12.39 s with 1 process down to ~5.70 s with 4 processes. This shows good strong scaling: doubling the processes reduces computation time considerably. Data distribution overhead remains small, indicating efficient initialization and data partitioning.
 
 #### Weak Scaling (Isogranular Scaling)
 Problem Setup: Increase the matrix size proportionally to the number of processes, maintaining a similar workload per process. Six iterations were run for each configuration.
+![image](https://github.com/syzzzhou/CSCI-596-Project-parallel-computation-of-SVD/blob/Xin-He/images/Screenshot%202024-12-13%20174513.jpg)
 
-1 Process (500 x 500): Whole Running Time: 12.076630 s Distribute Data Time: 0.002714 s Parallel Compute Time: 13.066708 s (Slight discrepancy may be due to timing noise)
-
-2 Processes (629 x 629): Whole Running Time: 14.895223 s Distribute Data Time: 0.018093 s Parallel Compute Time: 14.865921 s
-
-4 Processes (793 x 793): Whole Running Time: 20.631163 s Distribute Data Time: 0.038218 s Parallel Compute Time: 20.574913 s
-
-#### Analysis: 
-As we increase both problem size and process count, total runtime increases from ~12 s (1 process) to ~20.6 s (4 processes). When performing weak scaling, the problem size and the number of processes both grow, keeping the per-process workload roughly constant. This is not we expected.
+Analysis: As we increase both problem size and process count, total runtime increases from ~12 s (1 process) to ~20.6 s (4 processes). When performing weak scaling, the problem size and the number of processes both grow, keeping the per-process workload roughly constant. This is not we expected.
 
 #### The Problem of Using Parallel Computing Matrix Decomposition:
 1. More global communication: Operations like MPI_Allreduce occur more frequently and involve more processes, increasing communication overhead.
