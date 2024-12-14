@@ -71,11 +71,8 @@ We ran the MPI-enabled Jacobi-based SVD on a computing cluster managed by Carc:
 #### Strong Scaling (Fixed Problem Size)
 Problem Setup: Matrix dimension fixed at 500 x 500, running 6 iterations.
 
-1 Process: Whole Running Time: 12.389271 s Distribute Data Time: 0.063291 s Parallel Compute Time: 12.325980 s
-
-2 Processes: Whole Running Time: 7.527608 s Distribute Data Time: 0.075265 s Parallel Compute Time: 7.452343 s
-
-4 Processes: Whole Running Time: 5.703966 s Distribute Data Time: 0.080741 s Parallel Compute Time: 5.623225 s
+![image](https://github.com/syzzzhou/CSCI-596-Project-parallel-computation-of-SVD/blob/Xin-He/images/Screenshot%202024-12-13%20174446.jpg)
+![image](https://github.com/syzzzhou/CSCI-596-Project-parallel-computation-of-SVD/blob/Xin-He/images/Screenshot%202024-12-13%20174513.jpg)
 
 Analysis: As we increase the number of processes from 1 to 4 for the same problem size, the runtime decreases significantly: From ~12.39 s with 1 process down to ~5.70 s with 4 processes. This shows good strong scaling: doubling the processes reduces computation time considerably. Data distribution overhead remains small, indicating efficient initialization and data partitioning.
 
