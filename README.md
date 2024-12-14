@@ -85,6 +85,15 @@ Analysis: As we increase both problem size and process count, total runtime incr
 1. More global communication: Operations like MPI_Allreduce occur more frequently and involve more processes, increasing communication overhead.
 2. Longer iterations: Even if each process does roughly the same amount of work, the larger global problem size means more data to access, more rotations to compute, and extended synchronization periods, all contributing to a higher total runtime.
 
+### CUDA
+- **`cuda/`**  
+  Contains the `jacobi.cu` file, which implements the Jacobi algorithm for Singular Value Decomposition (SVD) using CUDA for parallel computation.
+
+- **Modified CPU-Based Implementation**  
+  The `SVD_jacob.c` file has been updated to:
+  - Accept matrix input from an external file for convenient testing with large matrices.
+  - Generate and save the resulting decomposed matrices (`A`, `S`, `U`, `V`) into separate files for verification and further analysis.
+
 
 
 
